@@ -1,6 +1,8 @@
 # brotkasten
 
-A `C64` EMULATOR.
+A `C64` (informally called "Brotkasten" in German) emulator.
+
+This project is in the earliest stages of development. Nothing to see here yet.
 
 ## References
 General:
