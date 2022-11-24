@@ -1,3 +1,4 @@
+mod instruction;
 mod status_flag;
 
 /// The `MOS6510` 8-bit CPU
