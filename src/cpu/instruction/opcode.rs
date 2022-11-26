@@ -97,6 +97,8 @@ pub enum Opcode {
     CLD,
     /// clear interrupt disable
     CLI,
+    /// clear overflow
+    CLV,
 
     /* load/store */
     /// load accumulator
