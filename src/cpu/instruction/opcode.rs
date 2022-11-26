@@ -54,7 +54,7 @@ pub enum Opcode {
     /// branch on carry set
     BCS,
     /// branch on equal (zero set)
-    BEO,
+    BEQ,
     /// branch on minus (negative set)
     BMI,
     /// branch on not equal (zero clear)
