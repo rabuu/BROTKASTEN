@@ -1,4 +1,4 @@
-# brotkasten
+# BROTKASTEN
 
 A `C64` (informally called "Brotkasten" in German) emulator.
 
