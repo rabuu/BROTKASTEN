@@ -10,8 +10,8 @@ pub static INSTRUCTIONS: [Option<(opcode::Opcode, addressing::AddrMode)>; 256] =
     None,             // 0x02
     None,             // 0x03
     None,             // 0x04
-    Some((ORA, Zp)),  // 0x05
-    Some((ASL, Zp)),  // 0x06
+    Some((ORA, Zpg)), // 0x05
+    Some((ASL, Zpg)), // 0x06
     None,             // 0x07
     Some((PHP, Imp)), // 0x08
     Some((ORA, Imm)), // 0x09
@@ -41,9 +41,9 @@ pub static INSTRUCTIONS: [Option<(opcode::Opcode, addressing::AddrMode)>; 256] =
     Some((AND, Inx)), // 0x21
     None,             // 0x22
     None,             // 0x23
-    Some((BIT, Zp)),  // 0x24
-    Some((AND, Zp)),  // 0x25
-    Some((ROL, Zp)),  // 0x26
+    Some((BIT, Zpg)), // 0x24
+    Some((AND, Zpg)), // 0x25
+    Some((ROL, Zpg)), // 0x26
     None,             // 0x27
     Some((PLP, Imp)), // 0x28
     Some((AND, Imm)), // 0x29
@@ -74,8 +74,8 @@ pub static INSTRUCTIONS: [Option<(opcode::Opcode, addressing::AddrMode)>; 256] =
     None,             // 0x42
     None,             // 0x43
     None,             // 0x44
-    Some((EOR, Zp)),  // 0x45
-    Some((LSR, Zp)),  // 0x46
+    Some((EOR, Zpg)), // 0x45
+    Some((LSR, Zpg)), // 0x46
     None,             // 0x47
     Some((PHA, Imp)), // 0x48
     Some((EOR, Imm)), // 0x49
@@ -106,8 +106,8 @@ pub static INSTRUCTIONS: [Option<(opcode::Opcode, addressing::AddrMode)>; 256] =
     None,             // 0x62
     None,             // 0x63
     None,             // 0x64
-    Some((ADC, Zp)),  // 0x65
-    Some((ROR, Zp)),  // 0x66
+    Some((ADC, Zpg)), // 0x65
+    Some((ROR, Zpg)), // 0x66
     None,             // 0x67
     Some((PLA, Imp)), // 0x68
     Some((ADC, Imm)), // 0x69
@@ -137,9 +137,9 @@ pub static INSTRUCTIONS: [Option<(opcode::Opcode, addressing::AddrMode)>; 256] =
     Some((STA, Inx)), // 0x81
     None,             // 0x82
     None,             // 0x83
-    Some((STY, Zp)),  // 0x84
-    Some((STA, Zp)),  // 0x85
-    Some((STX, Zp)),  // 0x86
+    Some((STY, Zpg)), // 0x84
+    Some((STA, Zpg)), // 0x85
+    Some((STX, Zpg)), // 0x86
     None,             // 0x87
     Some((DEY, Imp)), // 0x88
     None,             // 0x89
@@ -169,9 +169,9 @@ pub static INSTRUCTIONS: [Option<(opcode::Opcode, addressing::AddrMode)>; 256] =
     Some((LDA, Inx)), // 0xa1
     Some((LDX, Imm)), // 0xa2
     None,             // 0xa3
-    Some((LDY, Zp)),  // 0xa4
-    Some((LDA, Zp)),  // 0xa5
-    Some((LDX, Zp)),  // 0xa6
+    Some((LDY, Zpg)), // 0xa4
+    Some((LDA, Zpg)), // 0xa5
+    Some((LDX, Zpg)), // 0xa6
     None,             // 0xa7
     Some((TAY, Imp)), // 0xa8
     Some((LDA, Imm)), // 0xa9
@@ -201,9 +201,9 @@ pub static INSTRUCTIONS: [Option<(opcode::Opcode, addressing::AddrMode)>; 256] =
     Some((CMP, Inx)), // 0xc1
     None,             // 0xc2
     None,             // 0xc3
-    Some((CPY, Zp)),  // 0xc4
-    Some((CMP, Zp)),  // 0xc5
-    Some((DEC, Zp)),  // 0xc6
+    Some((CPY, Zpg)), // 0xc4
+    Some((CMP, Zpg)), // 0xc5
+    Some((DEC, Zpg)), // 0xc6
     None,             // 0xc7
     Some((INY, Imp)), // 0xc8
     Some((CMP, Imm)), // 0xc9
@@ -233,9 +233,9 @@ pub static INSTRUCTIONS: [Option<(opcode::Opcode, addressing::AddrMode)>; 256] =
     Some((SBC, Inx)), // 0xe1
     None,             // 0xe2
     None,             // 0xe3
-    Some((CPX, Zp)),  // 0xe4
-    Some((SBC, Zp)),  // 0xe5
-    Some((INC, Zp)),  // 0xe6
+    Some((CPX, Zpg)), // 0xe4
+    Some((SBC, Zpg)), // 0xe5
+    Some((INC, Zpg)), // 0xe6
     None,             // 0xe7
     Some((INX, Imp)), // 0xe8
     Some((SBC, Imm)), // 0xe9

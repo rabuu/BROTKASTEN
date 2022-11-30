@@ -8,7 +8,7 @@ pub enum AddrMode {
     /// Y-indexed absolute
     Aby,
     /// zero-page
-    Zp,
+    Zpg,
     /// X-indexed zero-page
     Zpx,
     /// Y-indexed zero-page
