@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AddrMode {
     /// implied
     Imp,
@@ -29,7 +29,7 @@ pub enum AddrMode {
 }
 
 impl AddrMode {
-    const fn addr_size(&self) -> u8 {
+    pub const fn addr_size(&self) -> u16 {
         match self {
             AddrMode::Imp => 0,
             AddrMode::Abs => 2,

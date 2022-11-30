@@ -1,10 +1,14 @@
 use addressing::AddrMode::*;
 use opcode::Opcode::*;
 
-mod addressing;
-mod opcode;
+pub mod addressing;
+pub mod opcode;
 
-pub static INSTRUCTIONS: [Option<(opcode::Opcode, addressing::AddrMode)>; 256] = [
+pub type Instruction = (opcode::Opcode, addressing::AddrMode);
+pub type Operation = (opcode::Opcode, addressing::AddrOperand);
+
+/// lookup table to decode instructions
+pub static INSTRUCTIONS: [Option<Instruction>; 256] = [
     Some((BRK, Imp)), // 0x00
     Some((ORA, Inx)), // 0x01
     None,             // 0x02

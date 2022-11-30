@@ -1,3 +1,6 @@
+use self::instruction::addressing::AddrOperand;
+use self::instruction::Operation;
+
 mod instruction;
 mod status_flag;
 
@@ -19,4 +22,18 @@ pub struct MOS6510 {
 
     /// 64kB RAM
     ram: Box<[u8; 64_000]>,
+}
+
+impl MOS6510 {
+    pub fn fetch_decode(&mut self) -> Option<Operation> {
+        let op_byte: u8 = self.ram[self.pc as usize];
+
+        let (opcode, addr_mode) = instruction::INSTRUCTIONS[op_byte as usize]?;
+        let operand: AddrOperand = todo!();
+        let operation: Operation = (opcode, operand);
+
+        self.pc = self.pc.wrapping_add(1 + addr_mode.addr_size());
+
+        Some(operation)
+    }
 }
