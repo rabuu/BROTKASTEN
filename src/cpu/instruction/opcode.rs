@@ -1,28 +1,40 @@
 #[allow(clippy::upper_case_acronyms)]
 pub enum Opcode {
-    /* arithmetic */
-    /// add with carry
-    ADC,
-    /// subtract with carry
-    SBC,
+    /* transfer */
+    /// transfer accumulator to X
+    TAX,
+    /// transfer accumulator to Y
+    TAY,
+    /// transfer stack pointer to X
+    TSX,
+    /// transfer X to accumulator
+    TXA,
+    /// transfer X to stack pointer
+    TXS,
+    /// transfer Y to accumulator
+    TYA,
+    /// load accumulator
+    LDA,
+    /// load X
+    LDX,
+    /// load Y
+    LDY,
+    /// store accumulator
+    STA,
+    /// store X
+    STX,
+    /// store Y
+    STY,
 
-    /* compare */
-    /// compare with accumulator
-    CMP,
-    /// compare with X
-    CPX,
-    /// compare with Y
-    CPY,
-
-    /* logical */
-    /// AND with accumulator
-    AND,
-    /// XOR with accumulator
-    EOR,
-    /// OR with accumulator
-    ORA,
-    /// bit test
-    BIT,
+    /* stack */
+    /// push accumulator
+    PHA,
+    /// push processor status (SR)
+    PHP,
+    /// pull accumulator
+    PLA,
+    /// pull processor status (SR)
+    PLP,
 
     /* increment/decrement */
     /// decrement
@@ -38,7 +50,21 @@ pub enum Opcode {
     /// increment Y
     INY,
 
-    /* shifts */
+    /* arithmetic */
+    /// add with carry
+    ADC,
+    /// subtract with carry
+    SBC,
+
+    /* logical */
+    /// AND with accumulator
+    AND,
+    /// XOR with accumulator
+    EOR,
+    /// OR with accumulator
+    ORA,
+
+    /* shift/rotate */
     /// arithmetic shift left
     ASL,
     /// logical shift right
@@ -47,6 +73,30 @@ pub enum Opcode {
     ROL,
     /// rotate right
     ROR,
+
+    /* status flags */
+    /// set carry
+    SEC,
+    /// set decimal
+    SED,
+    /// set interrupt disable
+    SEI,
+    /// clear carry
+    CLC,
+    /// clear decimal
+    CLD,
+    /// clear interrupt disable
+    CLI,
+    /// clear overflow
+    CLV,
+
+    /* comparison */
+    /// compare with accumulator
+    CMP,
+    /// compare with X
+    CPX,
+    /// compare with Y
+    CPY,
 
     /* branching */
     /// branch on carry clear
@@ -66,75 +116,23 @@ pub enum Opcode {
     /// branch on overflow set
     BVS,
 
-    /* system functions */
-    /// break / interrupt
-    BRK,
-    /// no operation
-    NOP,
-
-    /* jumps */
+    /* jump */
     /// jump
     JMP,
     /// jump subroutine
     JSR,
-
-    /* returns */
-    /// return from interrupt
-    RTI,
     /// return from subroutine
     RTS,
 
-    /* status flags */
-    /// set carry
-    SEC,
-    /// set decimal
-    SED,
-    /// set interrupt disable
-    SEI,
-    /// clear carry
-    CLC,
-    /// clear decimal
-    CLD,
-    /// clear interrupt disable
-    CLI,
-    /// clear overflow
-    CLV,
+    /* interrupt */
+    /// break / interrupt
+    BRK,
+    /// return from interrupt
+    RTI,
 
-    /* load/store */
-    /// load accumulator
-    LDA,
-    /// load X
-    LDX,
-    /// load Y
-    LDY,
-    /// store accumulator
-    STA,
-    /// store X
-    STX,
-    /// store Y
-    STY,
-
-    /* push/pull */
-    /// push accumulator
-    PHA,
-    /// push processor status (SR)
-    PHP,
-    /// pull accumulator
-    PLA,
-    /// pull processor status (SR)
-    PLP,
-
-    /* transfers */
-    /// transfer accumulator to X
-    TAX,
-    /// transfer accumulator to Y
-    TAY,
-    /// transfer stack pointer to X
-    TSX,
-    /// transfer X to accumulator
-    TXA,
-    /// transfer X to stack pointer
-    TXS,
-    /// transfer Y to accumulator
-    TYA,
+    /* other */
+    /// bit test
+    BIT,
+    /// no operation
+    NOP,
 }
