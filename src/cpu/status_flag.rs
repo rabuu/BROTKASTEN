@@ -1,4 +1,5 @@
 /// Status flags for the `P` register
+#[derive(Debug)]
 pub enum StatusFlag {
     /// negative
     N = 1 << 7,

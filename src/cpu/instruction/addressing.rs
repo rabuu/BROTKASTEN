@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub enum AddrMode {
     /// implied
     Imp,
@@ -47,6 +48,7 @@ impl AddrMode {
     }
 }
 
+#[derive(Debug)]
 pub enum AddrOperand {
     Implied,
     Immediate(u8),

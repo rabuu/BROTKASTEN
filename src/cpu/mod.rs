@@ -2,6 +2,7 @@ mod instruction;
 mod status_flag;
 
 /// The `MOS6510` 8-bit CPU
+#[derive(Debug)]
 pub struct MOS6510 {
     /// accumulator register
     a: u8,

@@ -1,4 +1,5 @@
 #[allow(clippy::upper_case_acronyms)]
+#[derive(Debug)]
 pub enum Opcode {
     /* transfer */
     /// transfer accumulator to X
