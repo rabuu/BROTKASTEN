@@ -1,3 +1,5 @@
+use crate::memory::Ram;
+
 use self::instruction::addressing::AddrOperand;
 use self::instruction::Operation;
 
@@ -20,16 +22,16 @@ pub struct MOS6510 {
     /// processor status flag
     p: u8,
 
-    /// 64kB RAM
-    ram: Box<[u8; 64_000]>,
+    /// memory
+    ram: Ram,
 }
 
 impl MOS6510 {
     pub fn fetch_decode(&mut self) -> Option<Operation> {
-        let op_byte: u8 = self.ram[self.pc as usize];
+        let op_byte: u8 = self.ram.read(self.pc).unwrap();
 
         let (opcode, addr_mode) = instruction::INSTRUCTIONS[op_byte as usize]?;
-        let operand: AddrOperand = todo!();
+        let operand: AddrOperand = addr_mode.get_operand(self);
         let operation: Operation = (opcode, operand);
 
         self.pc = self.pc.wrapping_add(1 + addr_mode.addr_size());
