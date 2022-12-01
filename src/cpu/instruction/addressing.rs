@@ -1,3 +1,5 @@
+use crate::cpu::MOS6510;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AddrMode {
     /// implied
@@ -46,12 +48,32 @@ impl AddrMode {
             AddrMode::Imm => 1,
         }
     }
+
+    pub fn get_operand(&self, cpu: &MOS6510) -> AddrOperand {
+        let (x, y) = (cpu.x, cpu.y);
+        let addr_bytes = cpu.ram.read_slice(cpu.pc.wrapping_add(1), self.addr_size());
+
+        match self {
+            AddrMode::Imp => todo!(),
+            AddrMode::Abs => todo!(),
+            AddrMode::Abx => todo!(),
+            AddrMode::Aby => todo!(),
+            AddrMode::Zpg => todo!(),
+            AddrMode::Zpx => todo!(),
+            AddrMode::Zpy => todo!(),
+            AddrMode::Rel => todo!(),
+            AddrMode::Akk => todo!(),
+            AddrMode::Ind => todo!(),
+            AddrMode::Inx => todo!(),
+            AddrMode::Iny => todo!(),
+            AddrMode::Imm => todo!(),
+        }
+    }
 }
 
 #[derive(Debug)]
 pub enum AddrOperand {
     Implied,
-    Immediate(u8),
+    Value(u8),
     Relative(u16),
-    MemAddr(u16),
 }
