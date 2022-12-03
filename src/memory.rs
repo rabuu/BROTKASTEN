@@ -12,22 +12,28 @@ impl Ram {
         }
     }
 
-    pub fn read(&self, addr: u16) -> Option<u8> {
-        self.data.get(addr as usize).copied()
+    pub fn read(&self, addr: u16) -> u8 {
+        *self
+            .data
+            .get(addr as usize)
+            .expect("ERROR(memory::Ram): `addr` out of bounds")
     }
 
-    pub fn read_slice(&self, start: u16, offset: u16) -> Option<&[u8]> {
+    pub fn read_slice(&self, start: u16, offset: u16) -> &[u8] {
         self.data
             .get((start as usize)..(start as usize + offset as usize))
+            .expect("ERROR(memory::Ram): slice out of bounds")
     }
 
-    pub fn get_mut(&mut self, addr: u16) -> Option<&mut u8> {
-        self.data.get_mut(addr as usize)
+    pub fn get_mut(&mut self, addr: u16) -> &mut u8 {
+        self.data
+            .get_mut(addr as usize)
+            .expect("ERROR(memory::Ram): `addr` out of bounds")
     }
 
-    pub fn write(&mut self, addr: u16, val: u8) -> Result<u8, ()> {
-        let old = self.read(addr).ok_or(())?;
+    pub fn write(&mut self, addr: u16, val: u8) -> u8 {
+        let old = self.read(addr);
         self.data[addr as usize] = val;
-        Ok(old)
+        old
     }
 }

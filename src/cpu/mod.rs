@@ -28,7 +28,7 @@ pub struct MOS6510 {
 
 impl MOS6510 {
     pub fn fetch_decode(&mut self) -> Option<Operation> {
-        let op_byte: u8 = self.ram.read(self.pc).unwrap();
+        let op_byte: u8 = self.ram.read(self.pc);
 
         let (opcode, addr_mode) = instruction::INSTRUCTIONS[op_byte as usize]?;
         let operand: AddrOperand = addr_mode.get_operand(self);

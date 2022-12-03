@@ -51,42 +51,39 @@ impl AddrMode {
 
     pub fn get_operand(&self, cpu: &MOS6510) -> AddrOperand {
         let (x, y) = (cpu.x, cpu.y);
-        let addr_bytes = cpu
-            .ram
-            .read_slice(cpu.pc.wrapping_add(1), self.addr_size())
-            .unwrap();
+        let addr_bytes = cpu.ram.read_slice(cpu.pc.wrapping_add(1), self.addr_size());
 
         use AddrMode::*;
         match self {
             Imp | Akk => AddrOperand::Implied,
             Abs => {
                 let addr = construct_addr(addr_bytes[0], addr_bytes[1]);
-                let val = cpu.ram.read(addr).unwrap();
+                let val = cpu.ram.read(addr);
                 AddrOperand::Value(val)
             }
             Abx => {
                 let addr = construct_addr(addr_bytes[0], addr_bytes[1]).wrapping_add(x as u16);
-                let val = cpu.ram.read(addr).unwrap();
+                let val = cpu.ram.read(addr);
                 AddrOperand::Value(val)
             }
             Aby => {
                 let addr = construct_addr(addr_bytes[0], addr_bytes[1]).wrapping_add(y as u16);
-                let val = cpu.ram.read(addr).unwrap();
+                let val = cpu.ram.read(addr);
                 AddrOperand::Value(val)
             }
             Zpg => {
                 let addr = addr_bytes[0] as u16;
-                let val = cpu.ram.read(addr).unwrap();
+                let val = cpu.ram.read(addr);
                 AddrOperand::Value(val)
             }
             Zpx => {
                 let addr = addr_bytes[0].wrapping_add(x) as u16;
-                let val = cpu.ram.read(addr).unwrap();
+                let val = cpu.ram.read(addr);
                 AddrOperand::Value(val)
             }
             Zpy => {
                 let addr = addr_bytes[0].wrapping_add(y) as u16;
-                let val = cpu.ram.read(addr).unwrap();
+                let val = cpu.ram.read(addr);
                 AddrOperand::Value(val)
             }
             Rel => {
@@ -98,23 +95,23 @@ impl AddrMode {
             }
             Ind => {
                 let indirect_addr = construct_addr(addr_bytes[0], addr_bytes[1]);
-                let indirect = cpu.ram.read_slice(indirect_addr, 2).unwrap();
+                let indirect = cpu.ram.read_slice(indirect_addr, 2);
                 let addr = construct_addr(indirect[0], indirect[1]);
-                let val = cpu.ram.read(addr).unwrap();
+                let val = cpu.ram.read(addr);
                 AddrOperand::Value(val)
             }
             Inx => {
                 let start = addr_bytes[0].wrapping_add(x) as u16;
-                let indirect = cpu.ram.read_slice(start, 2).unwrap();
+                let indirect = cpu.ram.read_slice(start, 2);
                 let addr = construct_addr(indirect[0], indirect[1]);
-                let val = cpu.ram.read(addr).unwrap();
+                let val = cpu.ram.read(addr);
                 AddrOperand::Value(val)
             }
             Iny => {
                 let start = addr_bytes[0] as u16;
-                let indirect = cpu.ram.read_slice(start, 2).unwrap();
+                let indirect = cpu.ram.read_slice(start, 2);
                 let addr = construct_addr(indirect[0], indirect[1]).wrapping_add(y as u16);
-                let val = cpu.ram.read(addr).unwrap();
+                let val = cpu.ram.read(addr);
                 AddrOperand::Value(val)
             }
             Imm => AddrOperand::Value(addr_bytes[0]),
