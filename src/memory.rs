@@ -1,4 +1,4 @@
-pub const MEMORY_SIZE: usize = 0xffff; // 64kB
+pub const MEMORY_SIZE: usize = 0x10000; // 64kB
 
 /// Random-Access Memory (RAM)
 #[derive(Debug)]
