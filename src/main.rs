@@ -1,4 +1,14 @@
+use tracing_subscriber::prelude::*;
+
 fn main() {
+    let fmt_layer = tracing_subscriber::fmt::layer().without_time().pretty();
+    let filter_layer = tracing_subscriber::filter::LevelFilter::DEBUG;
+    // let filter_layer = tracing_subscriber::filter::EnvFilter...;
+    tracing_subscriber::registry()
+        .with(filter_layer)
+        .with(fmt_layer)
+        .init();
+
     // taken from https://github.com/mre/mos6502 README
 
     // calculate gcd of 56 and 49 using Euclid's algorithm

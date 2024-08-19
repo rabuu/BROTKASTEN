@@ -1,3 +1,6 @@
+use instruction::opcode::Opcode;
+use status_flag::StatusFlag;
+
 use crate::memory::Memory;
 
 use self::instruction::addressing::AddrOperand;
@@ -39,7 +42,7 @@ impl MOS6510 {
         }
     }
 
-    pub fn fetch_decode(&mut self) -> Option<Operation> {
+    fn fetch_decode(&mut self) -> Option<Operation> {
         let op_byte: u8 = self.mem.read(self.pc);
 
         let (opcode, addr_mode) = instruction::INSTRUCTIONS[op_byte as usize]?;
@@ -51,7 +54,33 @@ impl MOS6510 {
         Some(operation)
     }
 
+    fn execute_operation(&mut self, op: Operation) {
+        match op {
+            (Opcode::LDA, AddrOperand::Value(val)) => {
+                tracing::debug!("load {val} to acc");
+                // TODO: flags
+                self.acc = val;
+            }
+            (Opcode::SEC, AddrOperand::Implied) => {
+                tracing::debug!("set carry");
+                self.p |= StatusFlag::C as u8;
+            }
+            (Opcode::SBC, AddrOperand::Value(val)) => {
+                tracing::debug!("subtract {val} with carry");
+                // TODO: flags
+                self.acc -= val;
+            }
+            (opcode, operand) => tracing::error!(
+                "Unimplemented opcode {:?} for operand {:?}",
+                opcode,
+                operand
+            ),
+        }
+    }
+
     pub fn run(&mut self) {
-        todo!();
+        while let Some(op) = self.fetch_decode() {
+            self.execute_operation(op);
+        }
     }
 }
