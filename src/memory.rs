@@ -1,15 +1,14 @@
-const RAM_SIZE: usize = 0xffff; // 64kB
+pub const MEMORY_SIZE: usize = 0xffff; // 64kB
 
+/// Random-Access Memory (RAM)
 #[derive(Debug)]
-pub struct Ram {
-    data: Box<[u8; RAM_SIZE]>,
+pub struct Memory {
+    data: Box<[u8; MEMORY_SIZE]>,
 }
 
-impl Ram {
+impl Memory {
     pub fn new() -> Self {
-        Self {
-            data: Box::new([0; RAM_SIZE]),
-        }
+        Self::default()
     }
 
     pub fn read(&self, addr: u16) -> u8 {
@@ -35,5 +34,24 @@ impl Ram {
         let old = self.read(addr);
         self.data[addr as usize] = val;
         old
+    }
+
+    pub fn write_slice(&mut self, start: u16, data: &[u8]) -> Result<(), &'static str> {
+        for (i, &val) in data.iter().enumerate() {
+            if start as usize + i > MEMORY_SIZE {
+                return Err("data does not fit into memory");
+            }
+            self.data[start as usize + i] = val;
+        }
+
+        Ok(())
+    }
+}
+
+impl Default for Memory {
+    fn default() -> Self {
+        Self {
+            data: Box::new([0; MEMORY_SIZE]),
+        }
     }
 }

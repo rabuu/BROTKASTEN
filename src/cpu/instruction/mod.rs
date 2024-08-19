@@ -8,7 +8,7 @@ pub type Instruction = (opcode::Opcode, addressing::AddrMode);
 pub type Operation = (opcode::Opcode, addressing::AddrOperand);
 
 /// lookup table to decode instructions
-pub static INSTRUCTIONS: [Option<Instruction>; 256] = [
+pub const INSTRUCTIONS: [Option<Instruction>; 256] = [
     Some((BRK, Imp)), // 0x00
     Some((ORA, Inx)), // 0x01
     None,             // 0x02
