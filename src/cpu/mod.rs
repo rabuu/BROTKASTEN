@@ -61,19 +61,45 @@ impl MOS6510 {
 
     fn execute_operation(&mut self, op: Operation) {
         match op {
-            (Opcode::LDA, Operand::Direct(val)) => {
-                tracing::debug!("load {val} to acc");
+            (Opcode::LDA, Operand::Address(addr)) => {
+                let val = self.mem.read(addr);
+                tracing::debug!("load {val} (${addr}) to acc");
                 self.load_acc(val);
             }
             (Opcode::SEC, Operand::Implied) => {
                 tracing::debug!("set carry");
                 self.p |= Flags::C;
             }
-            (opcode, operand) => tracing::error!(
-                "Unimplemented opcode {:?} for operand {:?}",
-                opcode,
-                operand
-            ),
+            (Opcode::BEQ, Operand::AddressOffset(offset)) => {
+                tracing::debug!("branch if equal (zero set) -> {offset}");
+                if self.p.contains(Flags::Z) {
+                    tracing::debug!("branch taken");
+                    self.pc = self.pc.wrapping_add(offset);
+                }
+            }
+            (Opcode::BMI, Operand::AddressOffset(offset)) => {
+                tracing::debug!("branch on minus (negative set) -> {offset}");
+                if self.p.contains(Flags::N) {
+                    tracing::debug!("branch taken");
+                    self.pc = self.pc.wrapping_add(offset);
+                }
+            }
+            (Opcode::STA, Operand::Address(addr)) => {
+                tracing::debug!("store acc to memory at ${addr}");
+                self.mem.write(addr, self.acc);
+            }
+            (Opcode::JMP, Operand::Address(addr)) => {
+                tracing::debug!("jump to ${addr}");
+                self.pc = addr;
+            }
+            (opcode, operand) => {
+                tracing::error!(
+                    "Unimplemented opcode {:?} for operand {:?}",
+                    opcode,
+                    operand
+                );
+                std::process::exit(1);
+            }
         }
     }
 

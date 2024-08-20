@@ -11,8 +11,9 @@ pub type Operation = (opcode::Opcode, Operand);
 #[derive(Debug)]
 pub enum Operand {
     Implied,
-    Direct(u8),
-    Relative(u16),
+    Byte(u8),
+    Address(u16),
+    AddressOffset(u16),
 }
 
 /// lookup table to decode instructions

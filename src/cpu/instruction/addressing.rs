@@ -48,68 +48,38 @@ impl AddressingMode {
         use AddressingMode::*;
         match self {
             Imp | Akk => Operand::Implied,
-            Abs => {
-                let addr = construct_addr(addr_bytes[0], addr_bytes[1]);
-                let val = cpu.mem.read(addr);
-                Operand::Direct(val)
-            }
-            Abx => {
-                let addr = construct_addr(addr_bytes[0], addr_bytes[1]).wrapping_add(x as u16);
-                let val = cpu.mem.read(addr);
-                Operand::Direct(val)
-            }
-            Aby => {
-                let addr = construct_addr(addr_bytes[0], addr_bytes[1]).wrapping_add(y as u16);
-                let val = cpu.mem.read(addr);
-                Operand::Direct(val)
-            }
-            Zpg => {
-                let addr = addr_bytes[0] as u16;
-                let val = cpu.mem.read(addr);
-                Operand::Direct(val)
-            }
-            Zpx => {
-                let addr = addr_bytes[0].wrapping_add(x) as u16;
-                let val = cpu.mem.read(addr);
-                Operand::Direct(val)
-            }
-            Zpy => {
-                let addr = addr_bytes[0].wrapping_add(y) as u16;
-                let val = cpu.mem.read(addr);
-                Operand::Direct(val)
-            }
+            Abs => Operand::Address(concat(addr_bytes[0], addr_bytes[1])),
+            Abx => Operand::Address(concat(addr_bytes[0], addr_bytes[1]).wrapping_add(x as u16)),
+            Aby => Operand::Address(concat(addr_bytes[0], addr_bytes[1]).wrapping_add(y as u16)),
+            Zpg => Operand::Address(addr_bytes[0] as u16),
+            Zpx => Operand::Address(addr_bytes[0].wrapping_add(x) as u16),
+            Zpy => Operand::Address(addr_bytes[0].wrapping_add(y) as u16),
             Rel => {
                 let offset = addr_bytes[0];
                 let sign_extend = if offset & 0b10000000 != 0 { 0xff } else { 0x00 };
                 let rel = u16::from_le_bytes([offset, sign_extend]);
-                Operand::Relative(rel)
+                Operand::AddressOffset(rel)
             }
             Ind => {
-                let indirect_addr = construct_addr(addr_bytes[0], addr_bytes[1]);
+                let indirect_addr = concat(addr_bytes[0], addr_bytes[1]);
                 let indirect = cpu.mem.read_slice(indirect_addr, 2);
-                let addr = construct_addr(indirect[0], indirect[1]);
-                let val = cpu.mem.read(addr);
-                Operand::Direct(val)
+                Operand::Address(concat(indirect[0], indirect[1]))
             }
             Inx => {
                 let start = addr_bytes[0].wrapping_add(x) as u16;
                 let indirect = cpu.mem.read_slice(start, 2);
-                let addr = construct_addr(indirect[0], indirect[1]);
-                let val = cpu.mem.read(addr);
-                Operand::Direct(val)
+                Operand::Address(concat(indirect[0], indirect[1]))
             }
             Iny => {
                 let start = addr_bytes[0] as u16;
                 let indirect = cpu.mem.read_slice(start, 2);
-                let addr = construct_addr(indirect[0], indirect[1]).wrapping_add(y as u16);
-                let val = cpu.mem.read(addr);
-                Operand::Direct(val)
+                Operand::Address(concat(indirect[0], indirect[1]).wrapping_add(y as u16))
             }
-            Imm => Operand::Direct(addr_bytes[0]),
+            Imm => Operand::Byte(addr_bytes[0]),
         }
     }
 }
 
-fn construct_addr(first: u8, second: u8) -> u16 {
+fn concat(first: u8, second: u8) -> u16 {
     first as u16 + ((second as u16) << 8)
 }
