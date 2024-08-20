@@ -44,5 +44,6 @@ fn main() {
 
     cpu.run();
 
+    println!("ACC: {}", cpu.acc);
     assert_eq!(7, cpu.acc);
 }

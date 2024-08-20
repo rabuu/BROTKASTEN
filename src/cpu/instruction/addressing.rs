@@ -1,5 +1,6 @@
 use super::Operand;
 use crate::cpu::MOS6510;
+use crate::utils::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AddressingMode {
@@ -56,7 +57,7 @@ impl AddressingMode {
             Zpy => Operand::Address(addr_bytes[0].wrapping_add(y) as u16),
             Rel => {
                 let offset = addr_bytes[0];
-                let sign_extend = if offset & 0b10000000 != 0 { 0xff } else { 0x00 };
+                let sign_extend = if sign_bit(offset) { 0xff } else { 0x00 };
                 let rel = u16::from_le_bytes([offset, sign_extend]);
                 Operand::AddressOffset(rel)
             }
@@ -78,8 +79,4 @@ impl AddressingMode {
             Imm => Operand::Byte(addr_bytes[0]),
         }
     }
-}
-
-fn concat(first: u8, second: u8) -> u16 {
-    first as u16 + ((second as u16) << 8)
 }

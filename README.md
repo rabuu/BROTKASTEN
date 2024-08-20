@@ -2,7 +2,11 @@
 
 A `C64` (informally called "Brotkasten" in German) emulator.
 
-This project is in the earliest stages of development. Nothing to see here yet.
+This project is in the earliest stages of development.
+
+## What's already working (kind of)
+At the moment I work on the MOS6510 CPU.
+It is already capable of doing simple algorithms like Euclid's Algorithm for GCD.
 
 ## References
 General:
