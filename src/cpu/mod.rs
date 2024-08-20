@@ -77,16 +77,16 @@ impl MOS6510 {
                 tracing::debug!("load {val} ({addr:#x}) to acc");
                 self.load_acc(val);
             }
-	    (Opcode::LDX, Operand::Address(addr)) => {
-		let val = self.mem.read(addr);
-		tracing::debug!("load {val} ({addr:#x}) to X");
-		self.load_x(val);
-	    }
-	    (Opcode::LDY, Operand::Address(addr)) => {
-		let val = self.mem.read(addr);
-		tracing::debug!("load {val} ({addr:#x}) to Y");
-		self.load_y(val);
-	    }
+            (Opcode::LDX, Operand::Address(addr)) => {
+                let val = self.mem.read(addr);
+                tracing::debug!("load {val} ({addr:#x}) to X");
+                self.load_x(val);
+            }
+            (Opcode::LDY, Operand::Address(addr)) => {
+                let val = self.mem.read(addr);
+                tracing::debug!("load {val} ({addr:#x}) to Y");
+                self.load_y(val);
+            }
             (Opcode::SEC, Operand::Implied) => {
                 tracing::debug!("set carry");
                 self.p |= Flags::C;
@@ -156,11 +156,11 @@ impl MOS6510 {
                 tracing::debug!("store acc={} to memory at {addr:#x}", self.acc);
                 self.mem.write(addr, self.acc);
             }
-	    (Opcode::STX, Operand::Address(addr)) => {
+            (Opcode::STX, Operand::Address(addr)) => {
                 tracing::debug!("store X={} to memory at {addr:#x}", self.x);
                 self.mem.write(addr, self.x);
             }
-	    (Opcode::STY, Operand::Address(addr)) => {
+            (Opcode::STY, Operand::Address(addr)) => {
                 tracing::debug!("store Y={} to memory at {addr:#x}", self.y);
                 self.mem.write(addr, self.y);
             }
