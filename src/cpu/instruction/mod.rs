@@ -1,11 +1,19 @@
-use addressing::AddrMode::*;
+use addressing::AddressingMode::*;
 use opcode::Opcode::*;
 
 pub mod addressing;
 pub mod opcode;
 
-pub type Instruction = (opcode::Opcode, addressing::AddrMode);
-pub type Operation = (opcode::Opcode, addressing::AddrOperand);
+pub type Instruction = (opcode::Opcode, addressing::AddressingMode);
+pub type Operation = (opcode::Opcode, Operand);
+
+/// The operand an instruction acts with
+#[derive(Debug)]
+pub enum Operand {
+    Implied,
+    Direct(u8),
+    Relative(u16),
+}
 
 /// lookup table to decode instructions
 pub const INSTRUCTIONS: [Option<Instruction>; 256] = [

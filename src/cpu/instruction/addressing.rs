@@ -1,7 +1,8 @@
+use super::Operand;
 use crate::cpu::MOS6510;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum AddrMode {
+pub enum AddressingMode {
     /// implied
     Imp,
     /// absolute
@@ -30,100 +31,83 @@ pub enum AddrMode {
     Imm,
 }
 
-impl AddrMode {
+impl AddressingMode {
     pub const fn addr_size(&self) -> u16 {
+        use AddressingMode::*;
         match self {
-            AddrMode::Imp => 0,
-            AddrMode::Abs => 2,
-            AddrMode::Abx => 2,
-            AddrMode::Aby => 2,
-            AddrMode::Zpg => 1,
-            AddrMode::Zpx => 1,
-            AddrMode::Zpy => 1,
-            AddrMode::Rel => 1,
-            AddrMode::Akk => 0,
-            AddrMode::Ind => 2,
-            AddrMode::Inx => 1,
-            AddrMode::Iny => 1,
-            AddrMode::Imm => 1,
+            Imp | Akk => 0,
+            Zpg | Zpx | Zpy | Rel | Inx | Iny | Imm => 1,
+            Abs | Abx | Aby | Ind => 2,
         }
     }
 
-    pub fn get_operand(&self, cpu: &MOS6510) -> AddrOperand {
+    pub fn get_operand(&self, cpu: &MOS6510) -> Operand {
         let (x, y) = (cpu.x, cpu.y);
         let addr_bytes = cpu.mem.read_slice(cpu.pc.wrapping_add(1), self.addr_size());
 
-        use AddrMode::*;
+        use AddressingMode::*;
         match self {
-            Imp | Akk => AddrOperand::Implied,
+            Imp | Akk => Operand::Implied,
             Abs => {
                 let addr = construct_addr(addr_bytes[0], addr_bytes[1]);
                 let val = cpu.mem.read(addr);
-                AddrOperand::Value(val)
+                Operand::Direct(val)
             }
             Abx => {
                 let addr = construct_addr(addr_bytes[0], addr_bytes[1]).wrapping_add(x as u16);
                 let val = cpu.mem.read(addr);
-                AddrOperand::Value(val)
+                Operand::Direct(val)
             }
             Aby => {
                 let addr = construct_addr(addr_bytes[0], addr_bytes[1]).wrapping_add(y as u16);
                 let val = cpu.mem.read(addr);
-                AddrOperand::Value(val)
+                Operand::Direct(val)
             }
             Zpg => {
                 let addr = addr_bytes[0] as u16;
                 let val = cpu.mem.read(addr);
-                AddrOperand::Value(val)
+                Operand::Direct(val)
             }
             Zpx => {
                 let addr = addr_bytes[0].wrapping_add(x) as u16;
                 let val = cpu.mem.read(addr);
-                AddrOperand::Value(val)
+                Operand::Direct(val)
             }
             Zpy => {
                 let addr = addr_bytes[0].wrapping_add(y) as u16;
                 let val = cpu.mem.read(addr);
-                AddrOperand::Value(val)
+                Operand::Direct(val)
             }
             Rel => {
                 let offset = addr_bytes[0];
-                // a little awkward number magic
-                let sign_extend = if offset & 0x80 == 0x80 { 0xff } else { 0 };
+                let sign_extend = if offset & 0b10000000 != 0 { 0xff } else { 0x00 };
                 let rel = u16::from_le_bytes([offset, sign_extend]);
-                AddrOperand::Relative(rel)
+                Operand::Relative(rel)
             }
             Ind => {
                 let indirect_addr = construct_addr(addr_bytes[0], addr_bytes[1]);
                 let indirect = cpu.mem.read_slice(indirect_addr, 2);
                 let addr = construct_addr(indirect[0], indirect[1]);
                 let val = cpu.mem.read(addr);
-                AddrOperand::Value(val)
+                Operand::Direct(val)
             }
             Inx => {
                 let start = addr_bytes[0].wrapping_add(x) as u16;
                 let indirect = cpu.mem.read_slice(start, 2);
                 let addr = construct_addr(indirect[0], indirect[1]);
                 let val = cpu.mem.read(addr);
-                AddrOperand::Value(val)
+                Operand::Direct(val)
             }
             Iny => {
                 let start = addr_bytes[0] as u16;
                 let indirect = cpu.mem.read_slice(start, 2);
                 let addr = construct_addr(indirect[0], indirect[1]).wrapping_add(y as u16);
                 let val = cpu.mem.read(addr);
-                AddrOperand::Value(val)
+                Operand::Direct(val)
             }
-            Imm => AddrOperand::Value(addr_bytes[0]),
+            Imm => Operand::Direct(addr_bytes[0]),
         }
     }
-}
-
-#[derive(Debug)]
-pub enum AddrOperand {
-    Implied,
-    Value(u8),
-    Relative(u16),
 }
 
 fn construct_addr(first: u8, second: u8) -> u16 {

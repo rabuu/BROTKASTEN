@@ -3,8 +3,7 @@ use instruction::opcode::Opcode;
 
 use crate::memory::Memory;
 
-use self::instruction::addressing::AddrOperand;
-use self::instruction::Operation;
+use self::instruction::{Operand, Operation};
 
 mod flags;
 mod instruction;
@@ -46,7 +45,7 @@ impl MOS6510 {
         let op_byte: u8 = self.mem.read(self.pc);
 
         let (opcode, addr_mode) = instruction::INSTRUCTIONS[op_byte as usize]?;
-        let operand: AddrOperand = addr_mode.get_operand(&self);
+        let operand: Operand = addr_mode.get_operand(self);
         let operation: Operation = (opcode, operand);
 
         self.pc = self.pc.wrapping_add(1 + addr_mode.addr_size());
@@ -62,11 +61,11 @@ impl MOS6510 {
 
     fn execute_operation(&mut self, op: Operation) {
         match op {
-            (Opcode::LDA, AddrOperand::Value(val)) => {
+            (Opcode::LDA, Operand::Direct(val)) => {
                 tracing::debug!("load {val} to acc");
                 self.load_acc(val);
             }
-            (Opcode::SEC, AddrOperand::Implied) => {
+            (Opcode::SEC, Operand::Implied) => {
                 tracing::debug!("set carry");
                 self.p |= Flags::C;
             }
