@@ -1,5 +1,5 @@
 use instruction::opcode::Opcode;
-use status_flag::StatusFlag;
+use flags::Flags;
 
 use crate::memory::Memory;
 
@@ -7,7 +7,7 @@ use self::instruction::addressing::AddrOperand;
 use self::instruction::Operation;
 
 mod instruction;
-mod status_flag;
+mod flags;
 
 /// The `MOS6510` 8-bit CPU
 #[derive(Debug, Default)]
@@ -28,7 +28,7 @@ pub struct MOS6510 {
     pub pc: u16,
 
     /// processor status flag
-    pub p: u8,
+    pub p: Flags,
 
     /// memory
     pub mem: Memory,
@@ -54,21 +54,21 @@ impl MOS6510 {
         Some(operation)
     }
 
+    fn load_acc(&mut self, val: u8) {
+	self.acc = val;
+	self.p.overwrite(Flags::Z, val == 0);
+	self.p.overwrite(Flags::N, val & 0b10000000 != 0);
+    }
+
     fn execute_operation(&mut self, op: Operation) {
         match op {
             (Opcode::LDA, AddrOperand::Value(val)) => {
                 tracing::debug!("load {val} to acc");
-                // TODO: flags
-                self.acc = val;
+		self.load_acc(val);
             }
             (Opcode::SEC, AddrOperand::Implied) => {
                 tracing::debug!("set carry");
-                self.p |= StatusFlag::C as u8;
-            }
-            (Opcode::SBC, AddrOperand::Value(val)) => {
-                tracing::debug!("subtract {val} with carry");
-                // TODO: flags
-                self.acc -= val;
+                self.p |= Flags::C;
             }
             (opcode, operand) => tracing::error!(
                 "Unimplemented opcode {:?} for operand {:?}",
