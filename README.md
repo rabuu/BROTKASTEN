@@ -14,8 +14,9 @@ General:
 - https://www.codeproject.com/Articles/795037/Commodore-Emulator
 - https://github.com/kondrak/rust64
 
-CPU:
-- https://en.wikipedia.org/wiki/MOS_Technology_6502
+CPU (MOS 6510):
+- https://en.wikipedia.org/wiki/MOS_Technology_6510
+- https://c64os.com/post/6502instructions
 - http://www.6502.org/tutorials/6502opcodes.html
 - https://www.masswerk.at/6502/6502_instruction_set.html
 - https://github.com/mre/mos6502
