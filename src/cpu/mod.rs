@@ -5,7 +5,7 @@ use instruction::opcode::Opcode;
 use instruction::{Operand, Operation};
 
 mod flags;
-mod instruction;
+pub(crate) mod instruction;
 
 /// The `MOS6510` 8-bit CPU
 #[derive(Debug, Default)]
